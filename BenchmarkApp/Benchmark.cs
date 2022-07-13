@@ -5,7 +5,7 @@ using BenchmarkDotNet.Attributes;
 [MemoryDiagnoser]
 public class Benchmark
 {
-    [Params(10000000)]
+    [Params(1000, 100000, 10000000)]
     public int Iterations;
 
     [Benchmark]
