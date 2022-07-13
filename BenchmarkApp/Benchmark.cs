@@ -24,6 +24,20 @@ public class Benchmark
     }
 
     [Benchmark]
+    public void RandomNextMultiple()
+    {
+        var list = new List<long>();
+
+        ArgumentNullException.ThrowIfNull(list);
+
+        for (var x = 0; x < this.Iterations; x++)
+        {
+            var random = new Random();
+            list.Add(random.Next(int.MinValue, int.MaxValue));
+        }
+    }
+
+    [Benchmark]
     public void RandomSharedNext()
     {
         var list = new List<long>();
