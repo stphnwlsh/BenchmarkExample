@@ -1,52 +1,101 @@
 namespace BenchmarkApp;
 
 using BenchmarkDotNet.Attributes;
+using Generators;
 
 [MemoryDiagnoser]
 public class Benchmark
 {
-    [Params(1000, 100000, 10000000)]
+    [Params(1000, 100000, 100000000)]
     public int Iterations;
 
     [Benchmark]
-    public void RandomNext()
+    public void Locked()
     {
-        var list = new List<long>();
+        var array = new long[this.Iterations];
 
-        ArgumentNullException.ThrowIfNull(list);
+        ArgumentNullException.ThrowIfNull(array);
 
-        var random = new Random();
+        var random = new LockedRandom();
 
         for (var x = 0; x < this.Iterations; x++)
         {
-            list.Add(random.Next(int.MinValue, int.MaxValue));
+            array[x] = random.Next();
         }
     }
 
     [Benchmark]
-    public void RandomNextMultiple()
+    public void Shared()
     {
-        var list = new List<long>();
+        var array = new long[this.Iterations];
 
-        ArgumentNullException.ThrowIfNull(list);
+        ArgumentNullException.ThrowIfNull(array);
+
+        var random = new SharedRandom();
 
         for (var x = 0; x < this.Iterations; x++)
         {
-            var random = new Random();
-            list.Add(random.Next(int.MinValue, int.MaxValue));
+            array[x] = random.Next();
         }
     }
 
     [Benchmark]
-    public void RandomSharedNext()
+    public void Thread()
     {
-        var list = new List<long>();
+        var array = new long[this.Iterations];
 
-        ArgumentNullException.ThrowIfNull(list);
+        ArgumentNullException.ThrowIfNull(array);
+
+        var random = new ThreadRandom();
 
         for (var x = 0; x < this.Iterations; x++)
         {
-            list.Add(Random.Shared.Next(int.MinValue, int.MaxValue));
+            array[x] = random.Next();
         }
+    }
+
+    [Benchmark]
+    public void ParallelLocked()
+    {
+        var array = new long[this.Iterations];
+
+        ArgumentNullException.ThrowIfNull(array);
+
+        var random = new LockedRandom();
+
+        _ = Parallel.For(0, this.Iterations, x =>
+        {
+            array[x] = random.Next();
+        });
+    }
+
+    [Benchmark]
+    public void ParallelShared()
+    {
+        var array = new long[this.Iterations];
+
+        ArgumentNullException.ThrowIfNull(array);
+
+        var random = new SharedRandom();
+
+        _ = Parallel.For(0, this.Iterations, x =>
+        {
+            array[x] = random.Next();
+        });
+    }
+
+    [Benchmark]
+    public void ParallelThread()
+    {
+        var array = new long[this.Iterations];
+
+        ArgumentNullException.ThrowIfNull(array);
+
+        var random = new ThreadRandom();
+
+        _ = Parallel.For(0, this.Iterations, x =>
+        {
+            array[x] = random.Next();
+        });
     }
 }

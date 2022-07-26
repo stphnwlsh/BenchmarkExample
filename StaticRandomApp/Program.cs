@@ -1,14 +1,32 @@
-﻿Console.WriteLine("Started Running");
+﻿using Generators;
 
-var list = new List<long>();
+Console.WriteLine("Started Running");
 
-for (var x = 0; x < 10000; x++)
+const int iterations = 10000000;
+
+var array = new long[iterations];
+
+var failed = new FailedRandom();
+var shared = new SharedRandom();
+var locked = new LockedRandom();
+var thread = new ThreadRandom();
+
+_ = Parallel.For(0, iterations, (x, loop) =>
 {
-    var number = Random.Shared.Next(int.MinValue, int.MaxValue);
-    list.Add(number);
-    Console.WriteLine(number);
-}
+    // Generate Random Number
+    var number = shared.Next();
 
-Console.WriteLine($"List has {list.Count} items");
+    // Add Random Number to Array
+    array[x] = number;
+
+    // Check if the Random Number Failed to Generate Properly
+    if (number == 0)
+    {
+        Console.WriteLine($"{x}: FAILED");
+        loop.Stop();
+    }
+});
+
+Console.WriteLine($"List has {array.Length} items");
 
 Console.WriteLine("Finished Running");
