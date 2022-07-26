@@ -1,10 +1,10 @@
 namespace Generators;
 
-public class FailedRandom
+public class FailedRandom : IRandom
 {
     private readonly Random randomizer = new();
 
-    public int Next()
+    public int Generate()
     {
         return this.randomizer.Next();
     }

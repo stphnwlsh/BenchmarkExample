@@ -14,7 +14,7 @@ var thread = new ThreadRandom();
 _ = Parallel.For(0, iterations, (x, loop) =>
 {
     // Generate Random Number
-    var number = shared.Next();
+    var number = shared.Generate();
 
     // Add Random Number to Array
     array[x] = number;

@@ -1,10 +1,10 @@
 namespace Generators;
 
-public class LockedRandom
+public class LockedRandom : IRandom
 {
     private readonly Random randomizer = new(Guid.NewGuid().GetHashCode());
 
-    public int Next()
+    public int Generate()
     {
         lock (this.randomizer)
         {

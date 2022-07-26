@@ -1,8 +1,8 @@
 namespace Generators;
 
-public class SharedRandom
+public class SharedRandom : IRandom
 {
-    public int Next()
+    public int Generate()
     {
         return Random.Shared.Next();
     }
