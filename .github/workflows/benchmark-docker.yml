@@ -2,8 +2,6 @@ name: Benchmark-Docker
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
 
 jobs:
   build:
