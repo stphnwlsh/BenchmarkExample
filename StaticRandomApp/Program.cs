@@ -18,6 +18,7 @@ foreach (var generator in generators)
     Console.WriteLine($"Started Running - {generator.Name}");
 
     var failures = 0;
+    var previous = -1;
 
     _ = Parallel.For(0, iterations, (x, loop) =>
     {
@@ -28,12 +29,14 @@ foreach (var generator in generators)
         array[x] = number;
 
         // Check if the Random Number Failed to Generate Properly
-        if (number == 0)
+        if (number == previous)
         {
             Console.WriteLine($"GENERATOR FAILED on iteration {x}");
             failures++;
             loop.Stop();
         }
+
+        previous = number;
     });
 
     Console.WriteLine($"{generator.Name} generated {array.Length - failures} unique items");

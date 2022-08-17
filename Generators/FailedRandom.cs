@@ -8,6 +8,6 @@ public class FailedRandom : IRandom
 
     public int Generate()
     {
-        return this.randomizer.Next();
+        return this.randomizer.Next(1, int.MaxValue);
     }
 }

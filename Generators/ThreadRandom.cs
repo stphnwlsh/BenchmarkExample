@@ -9,6 +9,6 @@ public class ThreadRandom : IRandom
 
     public int Generate()
     {
-        return this.randomizer.Value.Next();
+        return this.randomizer.Value.Next(1, int.MaxValue);
     }
 }

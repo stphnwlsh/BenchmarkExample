@@ -10,7 +10,8 @@ public class LockedRandom : IRandom
     {
         lock (this.randomizer)
         {
-            return this.randomizer.Next();
+            return this.randomizer.Next(1, int.MaxValue);
+
         }
     }
 }
