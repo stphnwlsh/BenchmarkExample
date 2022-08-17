@@ -11,22 +11,34 @@ var shared = new SharedRandom();
 var locked = new LockedRandom();
 var thread = new ThreadRandom();
 
-_ = Parallel.For(0, iterations, (x, loop) =>
+var generators = new List<IRandom> { failed, shared, locked, thread };
+
+foreach (var generator in generators)
 {
-    // Generate Random Number
-    var number = shared.Generate();
+    Console.WriteLine($"Started Running - {generator.Name}");
 
-    // Add Random Number to Array
-    array[x] = number;
+    var failures = 0;
 
-    // Check if the Random Number Failed to Generate Properly
-    if (number == 0)
+    _ = Parallel.For(0, iterations, (x, loop) =>
     {
-        Console.WriteLine($"{x}: FAILED");
-        loop.Stop();
-    }
-});
+        // Generate Random Number
+        var number = generator.Generate();
 
-Console.WriteLine($"List has {array.Length} items");
+        // Add Random Number to Array
+        array[x] = number;
+
+        // Check if the Random Number Failed to Generate Properly
+        if (number == 0)
+        {
+            Console.WriteLine($"GENERATOR FAILED on iteration {x}");
+            failures++;
+            loop.Stop();
+        }
+    });
+
+    Console.WriteLine($"{generator.Name} generated {array.Length - failures} unique items");
+
+    Console.WriteLine($"Finished Running - {generator.Name}");
+}
 
 Console.WriteLine("Finished Running");
